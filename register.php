@@ -24,7 +24,7 @@ if($_SERVER['REQUEST_METHOD']=='post')
 </head>
 <body>
   <div class="header">
-        <h2>Sign in</h2>
+        <h2>Register</h2>
   </div>
         
   <form method="post" action="">
@@ -49,8 +49,11 @@ if($_SERVER['REQUEST_METHOD']=='post')
           <span><?php if(isset($password2_error)) echo $password2_error;?></span>
         </div>
         <div class="input-group">
-          <button type="submit" class="btn" name="reg_user">Log in</button>
+          <button type="submit" class="btn" name="reg_user">Register</button>
         </div>
+        <p>
+                Already a member? <a href="login.php">Sign in</a>
+        </p>
   </form>
 </body>
 </html>
