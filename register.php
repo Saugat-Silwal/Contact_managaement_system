@@ -1,20 +1,54 @@
 <?php 
-if($_SERVER['REQUEST_METHOD']=='post')
+$servername = "localhost:8080";
+$database = "cms";
+
+$conn = new mysqli($servername, $database);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+if($_SERVER['REQUEST_METHOD']=='POST')
 {
-  if(empty($_POST['username'])){
-    $username_error = "Please enter Username";
+  $username = $_POST['username'];
+  $email = $_POST['email'];
+  $password = $_POST['password1'];
+  $confirm_password = $_POST['password2'];
+
+  //validation done in this process
+  if($_SERVER['REQUEST_METHOD']=='post')
+  {
+    if(empty($_POST['username'])){
+      $username_error = "Please enter Username";
+    }
+  
+    if(empty($_POST['email'])){
+      $email_error = "Please enter Email";
+    } elseif (!preg_match("/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $_POST['email'])) {
+      $email_error = "Invalid email format";
+    }
+    if(empty($_POST['password1'])){
+      $password1_error = "Please enter password";
+    }
+    if(empty($_POST['password2'])){
+      $password2_error = "Please enter Password again";
+  
+    }
   }
 
-  if(empty($_POST['email'])){
-    $email_error = "Please enter Username";
-  }
-  if(empty($_POST['password1'])){
-    $password1_error = "Please enter password";
-  }
-  if(empty($_POST['password22'])){
-    $password2_error = "Please enter Password again";
-  }
+  // if (empty($username_error) && empty($email_error) && empty($password1_error) && empty($password2_error)) {
+  //   // Use prepared statements to prevent SQL injection
+  //   $stmt = $conn->prepare("INSERT INTO registration (username, email, password) VALUES (POSTusername, POSTemail, password1)");
+  //   $stmt->bind_param("sss", $username, $email, $password);
+
+  //   if ($stmt->execute()) {
+  //       echo "New record created successfully";
+  //   } else {
+  //       echo "Error: " . $stmt->error;
+  //   }
+  
+  $conn->close();
 }
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -24,7 +58,7 @@ if($_SERVER['REQUEST_METHOD']=='post')
 </head>
 <body>
   <div class="header">
-        <h2>Register</h2>
+        <h2>Sign in</h2>
   </div>
         
   <form method="post" action="">
@@ -45,7 +79,7 @@ if($_SERVER['REQUEST_METHOD']=='post')
         </div>
         <div class="input-group">
           <label>Confirm password</label>
-          <input type="password" name="password_2">
+          <input type="password" name="password2">
           <span><?php if(isset($password2_error)) echo $password2_error;?></span>
         </div>
         <div class="input-group">
