@@ -1,19 +1,18 @@
 <?php 
-$servername = "localhost:8080";
-$database = "cms";
-
-$conn = new mysqli($servername, $database);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
 if($_SERVER['REQUEST_METHOD']=='POST')
 {
+  $servername = "localhost:8080";
+  $database = "cms";
+
+  $conn = new mysqli($servername,'root','', $database);
+
+  if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+  }
   $username = $_POST['username'];
-  $email = $_POST['email'];
+  $email = $_POST['mail'];
   $password = $_POST['password1'];
   $confirm_password = $_POST['password2'];
-
   //validation done in this process
   if($_SERVER['REQUEST_METHOD']=='post')
   {
@@ -34,18 +33,14 @@ if($_SERVER['REQUEST_METHOD']=='POST')
   
     }
   }
+    $sql = "INSERT INTO registration (name,email,password) VALUES ('$username', '$email', '$password')";
 
-  // if (empty($username_error) && empty($email_error) && empty($password1_error) && empty($password2_error)) {
-  //   // Use prepared statements to prevent SQL injection
-  //   $stmt = $conn->prepare("INSERT INTO registration (username, email, password) VALUES (POSTusername, POSTemail, password1)");
-  //   $stmt->bind_param("sss", $username, $email, $password);
+    if ($conn->query($sql) === TRUE) {
+      echo "record inserted successfully";
+  } else {
+      echo "Error: " . $sql . "<br>" . $conn->error;
+  }
 
-  //   if ($stmt->execute()) {
-  //       echo "New record created successfully";
-  //   } else {
-  //       echo "Error: " . $stmt->error;
-  //   }
-  
   $conn->close();
 }
 
@@ -58,10 +53,10 @@ if($_SERVER['REQUEST_METHOD']=='POST')
 </head>
 <body>
   <div class="header">
-        <h2>Sign in</h2>
+        <h2>Register in</h2>
   </div>
         
-  <form method="post" action="">
+  <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
         <div class="input-group">
           <label>Username</label>
           <input type="text" name="username">
@@ -69,7 +64,7 @@ if($_SERVER['REQUEST_METHOD']=='POST')
         </div>
         <div class="input-group">
           <label>Email</label>
-          <input type="email" name="email">
+          <input type="email" name="mail">
           <span> <?php if(isset($email_error)) echo $email_error; ?></span>
         </div>
         <div class="input-group">
